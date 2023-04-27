@@ -39,26 +39,6 @@ public:
 	UObject* FindObject(const char* name) const;
 };
 
-
-/*
-class ufield : public UObject {
-public:
-	char UnknownData_28[0x8];
-};
-
-
-class ustruct : public ufield {
-public:
-	char pad_30[0x10];
-	ustruct* SuperStruct;
-	char UnknownData_48[0x68];
-};
-
-class uclass : public ustruct {
-public:
-	char UnknownData_B0[0x180];
-};*/
-
 template <class T>
 class TArray 
 {
@@ -66,6 +46,32 @@ public:
 	T* Objects;
 	int Count;
 	int Size;
+};
+
+
+class FText
+{
+public:
+	class FTextData* TextData; //0x0000
+}; //Size: 0x0008
+static_assert(sizeof(FText) == 0x8,"");
+
+class FTextData
+{
+public:
+	wchar_t* Text; //0x0000
+}; //Size: 0x0008
+static_assert(sizeof(FTextData) == 0x8,"");
+
+class FString
+{
+public:
+	TArray<TCHAR> Data;
+
+	FORCEINLINE const wchar_t* c_str() const
+	{
+		return Data.Objects;
+	}
 };
 
 class FVector {
@@ -114,6 +120,15 @@ public:
 
 
 
+	// Functions 
+public:
+};
+
+class UScriptStruct : public UStruct
+{
+
+public:
+	char pad_176[16];  // Offset: 176 Size: 16
 	// Functions 
 public:
 };

@@ -159,6 +159,8 @@
     <ClInclude Include="Minhook\include\MinHook.h" />
     <ClInclude Include="sdk.h" />
     <ClInclude Include="sdk_functions.h" />
+    <ClInclude Include="sdk_objects.cpp" />
+    <ClInclude Include="sdk_objects.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />

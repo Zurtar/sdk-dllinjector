@@ -36,6 +36,12 @@
     <ClInclude Include="Minhook\include\MinHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sdk_objects.cpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

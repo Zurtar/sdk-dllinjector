@@ -31,6 +31,8 @@ procevent_fn process_event_original = 0;
 
 FILE* logFile;
 
+bool loging = false;
+
 void dumpObjects(FILE* logFile) {
 	for (uint32_t i = 0; i < ObjectArray->NumElements; i++) {
 		auto obj = ObjectArray->GetObjectPtr(i);
@@ -46,6 +48,7 @@ void dumpObjects(FILE* logFile) {
 }
 
 void post_render_hook(UGameViewportClient* viewport_client, UObject* canvas) {
+
 	auto world = viewport_client->World;
 
 	auto game_instance = viewport_client->GameInstance;
@@ -58,16 +61,13 @@ void post_render_hook(UGameViewportClient* viewport_client, UObject* canvas) {
 
 	for (int i = 0; i < world->Levels.Count; i++) {
 		auto level = MainMenuWorld->PersistentLevel;
-
+		
 		if (level) {
 			for (int j = 0; j < level->NearActors.Count; j++) {
 				auto actor = level->NearActors.Objects[j];
 
 				if (actor && actor->RootComponent) {
-					auto location = actor->K2_GetActorLocation();
-					auto rotation = actor->K2_GetActorRotation();
-
-					std::printf("Actor Name:[%s]	 Location:[%.0f, %.0f, %.0f] Rotation:[%0.f, %0.f] \n", actor->GetName().c_str(), location.x, location.z, location.z, rotation.x, rotation.y);
+					fprintf(logFile,"Actor Name:[%s]\n", actor->GetFullName().c_str());
 				}
 			}
 		}
@@ -79,19 +79,45 @@ void post_render_hook(UGameViewportClient* viewport_client, UObject* canvas) {
 void process_event_hook(UObject* caller, UObject* fn, void* params) {
 
 	if (fn == functions::MOLoginScreen_LogIn_FN) {
-		printf("BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
-		//caller = (UObject*)objects::GameModeMenu;
-		fn = ObjectArray->FindObject("Function MortalOnline2.MOGameModeMenu.ShowCharacterSelect");
+	//	printf("BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+	//	fprintf(logFile,"BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+	//	fflush(stdout);
+
+	//	caller = (UObject*)objects::GameModeMenu;
+	//	fn = ObjectArray->FindObject("Function MortalOnline2.MOGameModeMenu.ShowCharacterSelect");
 	}
 	
+	if (fn == functions::testFunc_FN) {
+		printf("BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+		fprintf(logFile, "BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+		
+		//caller = ObjectArray->FindObject("WB_CharacterCreationNew_C Transient.GameEngine_2147482598.BP_MortalOnlineGameInstance_C_2147482582.WB_MO_LoginHUD_C_2147482426.WidgetTree.pMOCharacterCreationNew");
+		//fn = ObjectArray->FindObject("Function MortalOnline2.MOCharacterCreationNew.CreateCharacter");
+		//process_event_original(caller, fn, params);
+		
+		//caller = (UObject*)objects::GameModeMenu;
+		//UObject* bankerGenerated = ObjectArray->FindObject("MOCharacterAIGenerated MortalOnline2.Default__MOCharacterAIGenerated");
+		
+		
+		//CreateCharacter(struct FString sName, struct FString sSurName, int32_t iStartingPoint, int32_t iStartingEquipment, struct FMOCharacterBodyData BodyData, struct FMOCharacterDecorationData DecorationData, struct FMOCharacterFaceCustomizationData FaceCustomizationData); // Function MortalOnline2.MOGameModeMenu.CreateCharacter
+		
+		process_event_original(objects::GameModeMenu, ObjectArray->FindObject("Function MortalOnline2.MOGameModeMenu.SelectCharacter"),params); //THIS FUCKING DID IT, I mean we're stuck on loading player data but hey progres..
+		loging = true;
+		
+		fprintf(logFile, "SENT SELECT CHARACTER");
+		fflush(stdout);
+		return;
+	}
+
 	
 	if (fn == functions::WB_LoginError_MOButtonClose_0_FN || fn == functions::WB_LoginError_MOButtonClose_1_FN) {
 		//fprintf(logFile, "BLOCKED :: Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
 		fn = ObjectArray->FindObject("Function MortalOnline2.MOUserWidget.CloseMOWidget");
 	}
 
-
-	//fprintf(logFile, "Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+	if (loging) {
+	//	fprintf(logFile, "Caller [%s] Function [%s]\n", caller->GetName().c_str(), fn->GetFullName().c_str());
+	}
 	process_event_original(caller, fn, params);
 }
 
@@ -117,7 +143,7 @@ void init() {
 	freopen_s(&fDummy, "CONOUT$", "w+t", stdout);
 	freopen_s(&fDummy, "CONOUT$", "w+t", stderr);
 
-	//fopen_s(&logFile, "C:\\Users\\ethan\\OneDrive\\Desktop\\datadump.txt", "w+t");
+	fopen_s(&logFile, "C:\\Users\\ethan\\OneDrive\\Desktop\\datadump.txt", "w+t");
 
 	std::cout.clear();
 	std::cin.clear();
@@ -136,6 +162,18 @@ void init() {
 
 	EngineGameInstance = (UMOGameInstance*)ObjectArray->FindObject("BP_MortalOnlineGameInstance_C Transient.GameEngine_2147482598.BP_MortalOnlineGameInstance_C_2147482582");
 
+	
+
+	//auto menu_game_instance = MainMenuWorld->OwningGameInstance;
+	
+	//auto local_player = EngineGameInstance->LocalPlayers.Objects[0];
+
+//	auto viewport_client = local_player->ViewportClient;
+
+//	void** VFTable = viewport_client->VFTable;
+
+	//original = reinterpret_cast<decltype(original)>(vmt_hook(VFTable, post_render_index, &post_render_hook));
+
 	auto process_event_addr = GWorld->GetProcessEventAddr();
 
 	MH_Initialize();
@@ -145,16 +183,9 @@ void init() {
 	MH_EnableHook((DWORD_PTR*)process_event_addr);
 
 	std::printf("Hooked Process Event			| Address [%llx] [%llx] \n", GWorld->VFTable[process_event_index], &GWorld->VFTable[process_event_index]);
-	/*	auto menu_game_instance = MainMenuWorld->OwningGameInstance;
 
-	auto local_player = EngineGameInstance->LocalPlayers.Objects[0];
-
-	auto viewport_client = local_player->ViewportClient;
-
-	void** VFTable = viewport_client->VFTable;
-	
-	//original = reinterpret_cast<decltype(original)>(vmt_hook(VFTable, post_render_index, &post_render_hook));
-
+	fflush(stdout);
+	/*	
 	auto process_event_addr = GWorld->GetProcessEventAddr();
 	*/
 }

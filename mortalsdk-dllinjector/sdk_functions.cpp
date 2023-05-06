@@ -53,7 +53,7 @@ namespace functions {
 
 	UObject* MOLoginScreen_LogIn_FN = 0;
 
-
+	UObject* testFunc_FN = 0;
 	
 
 
@@ -80,7 +80,7 @@ namespace functions {
 
 		MOLoginScreen_LogIn_FN = ObjectArray->FindObject("Function MortalOnline2.MOLoginScreen.LogIn");
 
-
+		testFunc_FN = ObjectArray->FindObject("Function WB_TabButtonNewImage.WB_TabButtonNewImage_C.BndEvt__pButton_K2Node_ComponentBoundEvent_1_OnButtonHoverEvent__DelegateSignature");
 
 		//CHEAT MANAGER
 		cheatmanager::RespawnLocalCharacter_FN = ObjectArray->FindObject("Function MortalOnline2.MOCheatManager.RespawnLocalCharacter");
@@ -95,3 +95,26 @@ namespace functions {
 
 	}
 }
+namespace objects {
+	UMOGlobal* MOGlobal = nullptr;
+	AMOCharacter* MOCharacter = nullptr;
+	UGeneralProjectSettings* ProjectSettings = nullptr;
+	UGameMapsSettings* GameMapSettings = nullptr;
+	UGameSessionSettings* GameSessionSettings = nullptr;
+	UObject* GeneralEngineSettings = nullptr;
+	UGameNetworkManagerSettings* GameNetworkManagerSettings = nullptr;
+	AMOGameModeMenu* GameModeMenu = nullptr;
+	UMOCheatManager* MainMenuCheat = nullptr;
+
+	void init() {
+		MOGlobal = (UMOGlobal*)ObjectArray->FindObject("MOGlobal MortalOnline2.Default__MOGlobal");
+		MOCharacter = (AMOCharacter*)ObjectArray->FindObject("MOCharacter MortalOnline2.Default__MOCharacter");
+		ProjectSettings = (UGeneralProjectSettings*)ObjectArray->FindObject("GeneralProjectSettings EngineSettings.Default__GeneralProjectSettings");
+		GameMapSettings = (UGameMapsSettings*)ObjectArray->FindObject("GameMapsSettings EngineSettings.Default__GameMapsSettings");
+		GameSessionSettings = (UGameSessionSettings*)ObjectArray->FindObject("GameSessionSettings EngineSettings.Default__GameSessionSettings");
+		GeneralEngineSettings = ObjectArray->FindObject("GeneralEngineSettings EngineSettings.Default__GeneralEngineSettings");
+		GameNetworkManagerSettings = (UGameNetworkManagerSettings*)ObjectArray->FindObject("GameNetworkManagerSettings EngineSettings.Default__GameNetworkManagerSettings");
+		GameModeMenu = (AMOGameModeMenu*)ObjectArray->FindObject("BP_MortalOnline2GameModeMenu_C MainMenu_P.MainMenu_P.PersistentLevel.BP_MortalOnline2GameModeMenu_C_2147482470");
+		MainMenuCheat = (UMOCheatManager*)ObjectArray->FindObject("MOCheatManager MainMenu_P.MainMenu_P.PersistentLevel.BP_MortalOnlinePlayerController_C_2147482446.MOCheatManager_2147482432");
+	}
+};

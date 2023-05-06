@@ -2218,6 +2218,50 @@ public:
 
 
 
+class AMOCharacterAI : public AMOCharacter
+{
+
+public:
+	struct UMODataAssetAiChat* pChatMessages;  // Offset: 3280 Size: 8
+	struct UMODataAssetNPCConversation* pDataAssetNPCConversation;  // Offset: 3288 Size: 8
+	char pad_3296_1 : 7;  // Offset: 3296 Size: 1
+	bool bUseCustomCollision : 1;  // Offset: 3296 Size: 1
+	char pad_3297_1 : 7;  // Offset: 3297 Size: 1
+	bool bUseCustomDisplayName : 1;  // Offset: 3297 Size: 1
+	char pad_3298[30];  // Offset: 3298 Size: 30
+
+
+
+	// Functions 
+public:
+	void ShowWeakSpot(struct FName sBoneName, bool bActivateWeakSpot); // Function MortalOnline2.MOCharacterAI.ShowWeakSpot
+	void PlayCustomAttackAnimation(int32_t iIndex, bool bInstantNoBlend); // Function MortalOnline2.MOCharacterAI.PlayCustomAttackAnimation
+	void PlayChargeAttackAnimation(); // Function MortalOnline2.MOCharacterAI.PlayChargeAttackAnimation
+	void PlayAttackAnimation(enum class EMOAIAttack Attack); // Function MortalOnline2.MOCharacterAI.PlayAttackAnimation
+	void BPEvent_Spawned(); // Function MortalOnline2.MOCharacterAI.BPEvent_Spawned
+	void BPEvent_ShowWeakSpot(struct FName sBoneName, bool bActivateWeakSpot); // Function MortalOnline2.MOCharacterAI.BPEvent_ShowWeakSpot
+	void BPEvent_EquipmentChanged(struct USkeletalMeshComponent* pEquipmentMesh); // Function MortalOnline2.MOCharacterAI.BPEvent_EquipmentChanged
+	void BPEvent_AtlasUse(); // Function MortalOnline2.MOCharacterAI.BPEvent_AtlasUse
+};
+
+
+//Class MortalOnline2.MOCharacterAIGenerated Size 4032
+// Inherited 3328 bytes 
+class AMOCharacterAIGenerated : public AMOCharacterAI
+{
+
+public:
+	char  sMOEquipmentData[560];  // Offset: 3320 Size: 560
+	char  sMOCharacterBodyData[48];  // Offset: 3880 Size: 48
+	char  sMOCharacterDecorationData[72];  // Offset: 3928 Size: 72
+	char  FaceCustomizationData[16];  // Offset: 4000 Size: 16
+	float fNextFloorAttemptTimer;  // Offset: 4016 Size: 4
+	char pad_4028[4];  // Offset: 4028 Size: 4
+
+	// Functions 
+public:
+};
+
 
 class UMOGlobal : public UBlueprintFunctionLibrary
 {

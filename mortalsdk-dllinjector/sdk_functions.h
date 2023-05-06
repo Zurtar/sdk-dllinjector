@@ -26,6 +26,8 @@ namespace functions {
 
 	extern UObject* MOLoginScreen_LogIn_FN;
 
+	extern UObject* testFunc_FN;
+
 	namespace cheatmanager {
 
 		extern UObject* RespawnLocalCharacter_FN;

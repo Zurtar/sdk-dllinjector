@@ -1,5 +1,5 @@
 #pragma once
-#include "engine.h"
+#include "sdk.h"
 
 namespace objects {
 
@@ -11,7 +11,7 @@ namespace objects {
 	extern UObject* GeneralEngineSettings;
 	extern UGameNetworkManagerSettings* GameNetworkManagerSettings;
 	extern AMOGameModeMenu* GameModeMenu;
-
+	extern UMOCheatManager* MainMenuCheat;
 
 	void init();
 }
